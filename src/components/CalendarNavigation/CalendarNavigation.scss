@@ -1,0 +1,27 @@
+
+.calendar-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    h2 {
+      font-size: 3em;
+      font-weight: bold;
+      margin: 0 0.5em;
+    }
+
+    button {
+      font-size: 3em;
+      border: none;
+      background-color: transparent;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}

@@ -1,0 +1,60 @@
+@import "../../styles/variables";
+
+.side-bar {
+  background-color: $side-bar-color;
+  display: flex;
+  flex-direction: column;
+
+  min-height: 100vh;
+  min-width: 20%;
+  max-width: 25%;
+
+  .season-logo {
+    min-height: 7em;
+    margin-bottom: 5em;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    background-color: $side-bar-logo-color;
+
+    h2 {
+      font-family: $primary-font-bold;
+      font-size: 32px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+  }
+
+  .side-bar-navigation {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    .side-bar-navigation-item {
+      margin: 0.5em 0;
+      padding: 0.5em 2em;
+
+      display: flex;
+      align-items: center;
+
+      font-family: $primary-font;
+      font-size: 20px;
+      color: #ffffff;
+
+      text-decoration: none !important;
+      cursor: pointer;
+
+      .navigation-item-icon {
+        margin: 0 0.5em;
+      }
+
+      &.active {
+        background-color: $side-bar-active-item-color;
+      }
+    }
+  }
+
+}

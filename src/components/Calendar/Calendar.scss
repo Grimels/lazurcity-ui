@@ -1,0 +1,43 @@
+$cell-size: 10px;
+$cell-padding: calc(#{$cell-size} / 2);
+$week-end-bg-color: #e7eff5;
+
+.accommodation-cell {
+  display: flex;
+  vertical-align: baseline!important;
+
+  border: 1px solid black;
+  padding: $cell-padding!important;
+  margin: 0;
+  min-width: $cell-size;
+  max-width: $cell-size;
+  min-height: $cell-size;
+  max-height: $cell-size;
+
+  .label {
+    z-index: 10000;
+    position: absolute;
+    text-overflow: clip;
+
+    color: white;
+    font-weight: bold;
+  }
+
+  &.week-end {
+    background-color: $week-end-bg-color;
+  }
+
+  & > .accommodation-line {
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    width: calc(#{$cell-size} + (#{$cell-padding} * 8));
+    transform: skew(-20deg);
+  }
+
+}
