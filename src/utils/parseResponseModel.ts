@@ -1,12 +1,7 @@
 import { IRoom, IRoomProjection } from '../types/room';
-import {
-	AccommodationInfo,
-	IAccommodation,
-	RoomAccommodationsHistory,
-} from '../types/accommodation';
+import { AccommodationInfo, IAccommodation, RoomAccommodationsHistory, } from '../types/accommodation';
 import { IClient } from '../types/client';
 import { dateInRange } from './equals';
-import { isWeekEndDay } from './dateUtils';
 
 class Parser {
 	
@@ -25,6 +20,8 @@ class Parser {
 			client: this.parseResponseClientModel(accommodation.client),
 			startDate: new Date(accommodation.startDate),
 			endDate: new Date(accommodation.endDate),
+			quantity: accommodation.quantity,
+			price: accommodation.price,
 		}
 	}
 	
@@ -71,6 +68,10 @@ class Parser {
 			client: this.parseResponseClientModel(accommodationDay.client),
 			startDate: new Date(accommodationDay.startDate),
 			endDate: new Date(accommodationDay.endDate),
+			price: accommodationDay.price,
+			quantity: accommodationDay.quantity,
+			roomName: accommodationDay.roomName,
+			roomId: accommodationDay.roomId,
 		}
 	}
 }

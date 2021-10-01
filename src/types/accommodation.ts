@@ -7,6 +7,8 @@ export interface IAccommodation {
 	startDate: Date,
 	endDate: Date,
 	id: number,
+	quantity: number,
+	price: number,
 }
 
 export interface AccommodationInfo {
@@ -15,6 +17,10 @@ export interface AccommodationInfo {
 	endDate: Date,
 	id: number,
 	daysLeft: number,
+	quantity: number,
+	price: number,
+	roomName: string,
+	roomId: number,
 }
 
 export interface RoomAccommodationsHistory {

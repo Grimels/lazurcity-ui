@@ -1,13 +1,42 @@
 $cell-size: 10px;
-$cell-padding: calc(#{$cell-size} / 2);
 $week-end-bg-color: #e7eff5;
+
+.table-wrapper {
+  overflow-x: scroll;
+  margin: auto;
+  overflow-y: visible;
+  padding: 0;
+
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: stretch;
+  max-width: 80vw;
+
+  table {
+    width: 100%;
+    margin: auto;
+    border-spacing: 0;
+    white-space: nowrap;
+
+    .fixed-column {
+      position: sticky;
+      left: -5px;
+      margin-left: -5px;
+      background-color: hsl(0, 0%, 95%);
+      visibility:visible;
+      border-top: 1px solid black;
+      border-bottom: 1px solid black;
+      z-index: 2;
+    }
+  }
+}
 
 .accommodation-cell {
   display: flex;
-  vertical-align: baseline!important;
+  vertical-align: center !important;
 
   border: 1px solid black;
-  padding: $cell-padding!important;
+  padding: 0.5em 1em !important;
   margin: 0;
   min-width: $cell-size;
   max-width: $cell-size;
@@ -17,7 +46,12 @@ $week-end-bg-color: #e7eff5;
   .label {
     z-index: 10000;
     position: absolute;
-    text-overflow: clip;
+    text-align: center;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: inherit;
 
     color: white;
     font-weight: bold;
@@ -27,16 +61,26 @@ $week-end-bg-color: #e7eff5;
     background-color: $week-end-bg-color;
   }
 
+  &.today {
+    background-color: hsl(0, 100%, 80%);
+  }
+
+  &.month {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+
   & > .accommodation-line {
     padding: 0;
     margin: 0;
+    position: sticky;
 
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
 
-    position: absolute;
-    width: calc(#{$cell-size} + (#{$cell-padding} * 8));
+    width: calc(#{$cell-size} + 80);
+    height: 1.75em;
     transform: skew(-20deg);
   }
 

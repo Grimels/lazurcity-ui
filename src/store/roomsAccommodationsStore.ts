@@ -1,8 +1,7 @@
-import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit'
-import { RoomDataService } from '../dataservices/RoomDataService';
-import { Status, STATUS } from '../constants/api';
-import { RoomAccommodationsHistory } from '../types/accommodation';
-import { AccommodationsDataService } from '../dataservices/AccommodationsDataService';
+import {createAsyncThunk, createSlice, SerializedError} from '@reduxjs/toolkit'
+import {Status, STATUS} from '../constants/api';
+import {RoomAccommodationsHistory} from '../types/accommodation';
+import {AccommodationsDataService} from '../dataservices/AccommodationsDataService';
 
 interface StoreLoadingStatus {
 	status: Status

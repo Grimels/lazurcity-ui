@@ -12,5 +12,4 @@ export interface Route {
 export const ROUTES: Route[] = [
     { Icon: Today, label: new Map([[RU, 'Календарь']]), path: '/calendar' },
     { Icon: Dashboard, label: new Map([[RU, 'Статистика']]), path: '/dashboard' },
-    { Icon: Dashboard, label: new Map([[RU, 'Свободные комнаты']]), path: '/rooms/free' },
 ]
