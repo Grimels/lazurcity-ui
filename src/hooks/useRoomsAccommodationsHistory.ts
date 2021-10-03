@@ -2,10 +2,39 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IStore } from '../store';
 import { useEffect } from 'react';
 import { STATUS } from '../constants/api';
-import { fetchRoomsAccommodationsHistory, RoomsAccommodationsStoreType, } from '../store/roomsAccommodationsStore';
+import {
+    createRoomAccommodation, deleteRoomAccommodation,
+    fetchRoomsAccommodationsHistory,
+    RoomsAccommodationsStoreType,
+    updateRoomAccommodation,
+} from '../store/roomsAccommodationsStore';
 import { equalsDates } from '../utils/equals';
 
-export const useRoomsAccommodationsHistory: (startDate: Date, endDate: Date) => { store: RoomsAccommodationsStoreType, refresh: () => void } = (startDate, endDate) => {
+export interface UpdateAccommodationActionProps {
+    accommodationId: number,
+    startDate: Date,
+    endDate: Date,
+    quantity: number,
+    price: number
+}
+
+export interface CreateAccommodationActionProps {
+    roomId: number,
+    clientName: string,
+    clientPhoneNumber: string,
+    startDate: Date,
+    endDate: Date,
+    quantity: number,
+    price: number
+}
+
+export const useRoomsAccommodationsHistory: (startDate: Date, endDate: Date) => {
+    store: RoomsAccommodationsStoreType,
+    refresh: () => void,
+    createAccommodation: (props: CreateAccommodationActionProps) => void,
+    updateAccommodation: (props: UpdateAccommodationActionProps) => void,
+    deleteAccommodation: (accommodationId: number) => void,
+} = (startDate, endDate) => {
     const store: RoomsAccommodationsStoreType = useSelector((store: IStore) => store.roomsAccommodationsHistory);
     const dispatch = useDispatch();
 
@@ -17,5 +46,39 @@ export const useRoomsAccommodationsHistory: (startDate: Date, endDate: Date) => 
     }, [dispatch, startDate, endDate, store.status]);
 
     const refresh = () => dispatch(fetchRoomsAccommodationsHistory({startDate, endDate}));
-    return {refresh, store};
+    const updateAccommodation: (props: UpdateAccommodationActionProps) => void = ({
+                                                                                accommodationId,
+                                                                                startDate,
+                                                                                endDate,
+                                                                                quantity,
+                                                                                price
+                                                                            }) =>
+        dispatch(updateRoomAccommodation({
+            accommodationId,
+            startDate,
+            endDate,
+            quantity,
+            price
+        }));
+    const createAccommodation: (props: CreateAccommodationActionProps) => void = ({
+                                                                                roomId,
+                                                                                clientName,
+                                                                                clientPhoneNumber,
+                                                                                startDate,
+                                                                                endDate,
+                                                                                quantity,
+                                                                                price,
+                                                                            }) =>
+        dispatch(createRoomAccommodation({
+            roomId,
+            clientName,
+            clientPhoneNumber,
+            startDate,
+            endDate,
+            quantity,
+            price,
+        }));
+    const deleteAccommodation: (accommodationId: number) => void = (accommodationId) =>
+        dispatch(deleteRoomAccommodation(accommodationId));
+    return {refresh, createAccommodation, updateAccommodation, deleteAccommodation, store};
 };

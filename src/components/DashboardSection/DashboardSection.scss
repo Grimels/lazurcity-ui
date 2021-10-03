@@ -1,0 +1,91 @@
+@import "../../styles/variables";
+
+.dashboard {
+  width: 100%;
+  padding: 1.5em;
+
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+
+  .header {
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 1em;
+
+    color: $side-bar-logo-color;
+  }
+
+  .section {
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+
+    .charts {
+      width: inherit;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  }
+
+  .incomes-chart-container {
+    width: 20vw;
+    height: min-content;
+    margin: 2em;
+    padding: 2em;
+
+    border: 1px solid #dcdcdc;
+    border-radius: 5%;
+
+    background-color: #f6f6f6;
+
+    &.full {
+      width: 100%;
+    }
+
+    h5 {
+      color: $side-bar-logo-color;
+    }
+
+    .incomes-chart {
+      margin-top: 10px;
+    }
+  }
+
+  .cards-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    .dashboard-card {
+      width: 15vw;
+      min-height: 15vh;
+      max-height: 15vh;
+      margin: 2em 0;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+
+      .stat-number, .stat-description {
+        padding: 10px;
+      }
+
+      .stat-number {
+        font-size: 2em;
+        font-weight: bold;
+      }
+
+      .stat-description {
+        font-size: 1.2em;
+        padding: 10px 30px;
+      }
+    }
+  }
+
+}

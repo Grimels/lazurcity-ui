@@ -8,7 +8,8 @@ import { store } from './store';
 
 import './App.css';
 import './styles/_reset.scss';
-import { CalendarNavigation } from './components/CalendarNavigation';
+import { CalendarSection } from './components/CalendarSection';
+import { DashboardSection } from './components/DashboardSection';
 
 store.subscribe(() => {
 	console.log(store.getState());
@@ -22,7 +23,8 @@ function App() {
 					<SideBar routes={ROUTES}/>
 					
 					<Switch>
-						<Route exact path="/calendar" component={CalendarNavigation}/>
+						<Route exact path="/calendar" component={CalendarSection}/>
+						<Route exact path="/dashboard" component={DashboardSection}/>
 					</Switch>
 				</BrowserRouter>
 			</Provider>

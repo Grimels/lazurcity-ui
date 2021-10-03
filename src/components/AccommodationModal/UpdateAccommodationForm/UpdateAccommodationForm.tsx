@@ -1,23 +1,22 @@
 import {
-    Button, Card,
+    Button,
+    Card,
     CardActions,
     CardContent,
     FormControl,
     FormHelperText,
     Input,
-    InputLabel, Modal,
+    InputLabel,
+    Modal,
     Typography
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { calculateTotalPriceText, renderFromDatePicker, renderToDatePicker } from '../utils';
 import { addDays, subDays } from 'date-fns';
 import { useForm } from 'react-hook-form';
-import { AccommodationsDataService } from '../../../dataservices/AccommodationsDataService';
 import { UpdateAccommodationProps } from '../AccommodationModal';
 
-export type UpdateAccommodationFormProps = UpdateAccommodationProps & { onSuccess: () => void, onClose: () => void };
-
-export const UpdateAccommodationForm: React.FC<UpdateAccommodationFormProps> = (props) => {
+export const UpdateAccommodationForm: React.FC<UpdateAccommodationProps> = (props) => {
     const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
     const {register, handleSubmit, watch, control, formState: {errors}} = useForm({
         defaultValues: {
@@ -32,20 +31,18 @@ export const UpdateAccommodationForm: React.FC<UpdateAccommodationFormProps> = (
     const {fromDate, toDate, quantity, price} = watch();
 
     const onUpdate = async () => {
-        await AccommodationsDataService
-            .updateAccommodation(props.accommodationId, fromDate, toDate, Number(quantity), Number(price));
-        props.onSuccess();
-        props.onClose();
+        props.updateAccommodation({
+            accommodationId: props.accommodationId,
+            startDate: fromDate,
+            endDate: toDate,
+            quantity: Number(quantity),
+            price: Number(price),
+        });
     }
 
     const confirmDelete = () => setConfirmationModalOpen(true);
 
-    const onDelete = async () => {
-        await AccommodationsDataService
-            .deleteAccommodation(props.accommodationId);
-        props.onSuccess();
-        props.onClose();
-    }
+    const onDelete = async () => props.deleteAccommodation(props.accommodationId);
 
     const getErrors = (fieldName: 'toDate' | 'fromDate' | 'quantity' | 'price' | 'clientName' | 'clientPhoneNumber') =>
         errors && errors[fieldName];

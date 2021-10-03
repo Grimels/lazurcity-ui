@@ -6,12 +6,15 @@ import DateFnsUtils from '@date-io/date-fns';
 import './AccommodationModal.scss';
 import { CreateAccommodationForm } from './CreateAccommodationForm';
 import { UpdateAccommodationForm } from './UpdateAccommodationForm';
+import {
+    CreateAccommodationActionProps,
+    UpdateAccommodationActionProps
+} from '../../hooks/useRoomsAccommodationsHistory';
 
 interface AccommodationModalProps {
     mode: 'create' | 'update',
     open: boolean;
     onClose: () => void;
-    onSuccess: () => void;
     roomName: string;
     roomId: number;
     nextAccommodationDate?: Date;
@@ -20,6 +23,7 @@ interface AccommodationModalProps {
 export interface CreateAccommodationProps extends AccommodationModalProps {
     mode: 'create',
     day: Date;
+    createAccommodation: (props: CreateAccommodationActionProps) => void,
 }
 
 export interface UpdateAccommodationProps extends AccommodationModalProps {
@@ -31,6 +35,8 @@ export interface UpdateAccommodationProps extends AccommodationModalProps {
     price: number;
     clientName: string;
     clientPhoneNumber: string;
+    updateAccommodation: (props: UpdateAccommodationActionProps) => void,
+    deleteAccommodation: (accommodationId: number) => void,
 }
 
 export const AccommodationModal: React.FC<CreateAccommodationProps | UpdateAccommodationProps> = (props) => {

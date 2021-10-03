@@ -1,5 +1,10 @@
 import { IRoom, IRoomProjection } from '../types/room';
-import { AccommodationInfo, IAccommodation, RoomAccommodationsHistory, } from '../types/accommodation';
+import {
+	AccommodationInfo,
+	AccommodationsStatistics, AccommodationsStatisticsResponse,
+	IAccommodation,
+	RoomAccommodationsHistory,
+} from '../types/accommodation';
 import { IClient } from '../types/client';
 import { dateInRange } from './equals';
 
@@ -74,6 +79,19 @@ class Parser {
 			roomId: accommodationDay.roomId,
 		}
 	}
+
+	parseResponseAccommodationStatisticsModel = (statistics: AccommodationsStatisticsResponse): AccommodationsStatistics => {
+		return {
+			day: statistics.day,
+			dailyIncome: statistics.dailyIncome,
+			busyRooms: statistics.busyRooms,
+			freeRooms: statistics.freeRooms,
+			roomsLeavingToday: statistics.roomsLeavingToday,
+			seasonIncomeByRoomName: new Map(Object.entries(statistics.seasonIncomeByRoomName)),
+			seasonIncomeByRoomCategory: new Map(Object.entries(statistics.seasonIncomeByRoomCategory)),
+			incomesByKey: new Map(Object.entries(statistics.incomesByKey).map(([key, value]) => [String(key), Number(value)])),
+		}
+	}
 }
 
 const parser = new Parser();
@@ -83,4 +101,5 @@ export const ResponseParser = {
 	parseRoom: parser.parseResponseRoomModel,
 	parseAccommodationsHistory: parser.parseResponseAccommodationHistoryModel,
 	parseAccommodation: parser.parseResponseAccommodationModel,
+	parseAccommodationsStatistics: parser.parseResponseAccommodationStatisticsModel,
 }

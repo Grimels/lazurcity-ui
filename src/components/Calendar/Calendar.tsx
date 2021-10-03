@@ -16,8 +16,10 @@ export interface CalendarProps {
 
 export const Calendar: React.FC<CalendarProps> = ({startDate, endDate}) => {
     const {
-        refresh: refreshStore,
-        store: roomsAccommodationsHistory
+        store: roomsAccommodationsHistory,
+        createAccommodation,
+        updateAccommodation,
+        deleteAccommodation,
     } = useRoomsAccommodationsHistory(startDate, endDate);
 
     const currentDayRef = React.createRef<HTMLTableHeaderCellElement>();
@@ -42,7 +44,10 @@ export const Calendar: React.FC<CalendarProps> = ({startDate, endDate}) => {
                     <Table>
                         <CalendarTableHead year={startDate.getFullYear()} dayRange={dayRange}
                                            currentDayRef={currentDayRef}/>
-                        <CalendarTableBody dayRange={dayRange} startDate={startDate} endDate={endDate} history={roomsAccommodationsHistory} refreshHistory={refreshStore} />
+                        <CalendarTableBody createAccommodation={createAccommodation}
+                                           updateAccommodation={updateAccommodation}
+                                           deleteAccommodation={deleteAccommodation} dayRange={dayRange}
+                                           startDate={startDate} endDate={endDate} history={roomsAccommodationsHistory}/>
                     </Table>
                 </div>
             );

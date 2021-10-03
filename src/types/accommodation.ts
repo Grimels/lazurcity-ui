@@ -31,3 +31,23 @@ export interface RoomAccommodationsHistory {
 	accommodations: Array<AccommodationInfo>,
 }
 
+export interface AccommodationsStatistics {
+	day: Date,
+	roomsLeavingToday: number,
+	dailyIncome: number,
+	freeRooms: number,
+	busyRooms: number,
+	seasonIncomeByRoomName: Map<string, number>,
+	seasonIncomeByRoomCategory: Map<string, number>,
+	incomesByKey: Map<string, number>,
+}
+export interface AccommodationsStatisticsResponse {
+	day: Date,
+	roomsLeavingToday: number,
+	dailyIncome: number,
+	freeRooms: number,
+	busyRooms: number,
+	seasonIncomeByRoomName: {},
+	seasonIncomeByRoomCategory: {},
+	incomesByKey: { [key: string]: number},
+}

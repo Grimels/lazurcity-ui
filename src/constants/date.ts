@@ -1,5 +1,10 @@
 import { Month } from '../types/date';
 
+export const SEASON = {
+	START: new Date(2021, 5, 1),
+	END: new Date(2021, 8, 29),
+};
+
 export const MONTH_NUMBER_BY_NAME: { [key in Month]: number } = {
 	'January':  0,
 	'February': 1,

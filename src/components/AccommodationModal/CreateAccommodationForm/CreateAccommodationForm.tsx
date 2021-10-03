@@ -12,12 +12,9 @@ import {
 import { calculateTotalPriceText, renderFromDatePicker, renderToDatePicker } from '../utils';
 import { useForm } from 'react-hook-form';
 import { addDays, differenceInDays, subDays } from 'date-fns';
-import { AccommodationsDataService } from '../../../dataservices/AccommodationsDataService';
 import { CreateAccommodationProps } from '../AccommodationModal';
 
-export type CreateAccommodationFormProps = CreateAccommodationProps & { onSuccess: () => void, onClose: () => void };
-
-export const CreateAccommodationForm: React.FC<CreateAccommodationFormProps> = (props) => {
+export const CreateAccommodationForm: React.FC<CreateAccommodationProps> = (props) => {
     const calculateMaxDate = () => (props.nextAccommodationDate && differenceInDays(props.nextAccommodationDate, props.day) < 3)
         ? props.nextAccommodationDate
         : addDays(props.day, 3);
@@ -34,10 +31,15 @@ export const CreateAccommodationForm: React.FC<CreateAccommodationFormProps> = (
     const {clientName, clientPhoneNumber, fromDate, toDate, quantity, price} = watch();
 
     const onSave = async () => {
-        await AccommodationsDataService
-            .createAccommodation(props.roomId, clientName, clientPhoneNumber, fromDate, toDate, Number(quantity), Number(price));
-        props.onSuccess();
-        props.onClose();
+        props.createAccommodation({
+            roomId: props.roomId,
+            clientName,
+            clientPhoneNumber,
+            startDate: fromDate,
+            endDate: toDate,
+            quantity: Number(quantity),
+            price: Number(price),
+        });
     }
 
     const getErrors = (fieldName: 'toDate' | 'fromDate' | 'quantity' | 'price' | 'clientName' | 'clientPhoneNumber') =>

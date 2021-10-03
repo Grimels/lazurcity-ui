@@ -1,6 +1,6 @@
 import { API } from '../constants/api';
 import { ResponseParser } from '../utils/parseResponseModel';
-import { IAccommodation, RoomAccommodationsHistory } from '../types/accommodation';
+import { AccommodationsStatistics, IAccommodation, RoomAccommodationsHistory } from '../types/accommodation';
 import { formatDate } from '../utils/dateUtils';
 
 
@@ -53,9 +53,15 @@ const updateAccommodation: (accommodationId: number,
 const deleteAccommodation: (accommodationId: number) => void = (accommodationId) =>
     fetch(`${API}/accommodations/${accommodationId}`, {method: 'DELETE'});
 
+const getAccommodationsStatistics: (startDate: Date, endDate: Date, date: Date) => Promise<AccommodationsStatistics> = (startDate, endDate, date) =>
+    fetch(`${API}/accommodations/statistics/from/${formatDate(startDate)}/to/${formatDate(endDate)}?date=${formatDate(date)}`)
+        .then(response => response.json())
+        .then(statistics => ResponseParser.parseAccommodationsStatistics(statistics));
+
 export const AccommodationsDataService = {
     getRoomAccommodationsHistory,
     createAccommodation,
     updateAccommodation,
     deleteAccommodation,
+    getAccommodationsStatistics,
 };
