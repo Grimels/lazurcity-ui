@@ -8,6 +8,8 @@ import { eachDayOfInterval } from "date-fns";
 import { CalendarTableHead } from './CalendarTableHead';
 import { useRoomsAccommodationsHistory } from '../../hooks/useRoomsAccommodationsHistory';
 import { CalendarTableBody } from './CalendarTableBody';
+import { Alert } from '@material-ui/lab';
+import { useClients } from '../../hooks/useClients';
 
 export interface CalendarProps {
     startDate: Date,
@@ -15,6 +17,7 @@ export interface CalendarProps {
 }
 
 export const Calendar: React.FC<CalendarProps> = ({startDate, endDate}) => {
+    useClients();
     const {
         store: roomsAccommodationsHistory,
         createAccommodation,
@@ -37,7 +40,7 @@ export const Calendar: React.FC<CalendarProps> = ({startDate, endDate}) => {
         case STATUS.LOADING:
             return <div>Loading...</div>;
         case STATUS.ERROR:
-            return <div>{roomsAccommodationsHistory.error}</div>
+            return  <Alert severity="error">{roomsAccommodationsHistory.error}</Alert>
         default:
             return (
                 <div className="table-wrapper">

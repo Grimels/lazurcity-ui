@@ -8,24 +8,34 @@ import { Typography } from '@material-ui/core';
 import { Doughnut, Line } from 'react-chartjs-2';
 import { getIncomesByMonthChart, getTopAccommodationIncomesData } from './utils';
 import { SEASON } from '../../constants/date';
+import { Alert } from '@material-ui/lab';
+import * as React from 'react';
 
 export const DashboardSection = () => {
     const [statistics, setStatistics] = useState<AccommodationsStatistics>();
+    const [error, setError] = useState<string>();
 
     useEffect(() => {
         (async () => {
-            const statisticsResponse = await AccommodationsDataService
-                .getAccommodationsStatistics(SEASON.START, SEASON.END, new Date(2021, 8, 13));
-            setStatistics(statisticsResponse);
+            try {
+                const statisticsResponse = await AccommodationsDataService
+                    .getAccommodationsStatistics(SEASON.START, SEASON.END, new Date(2021, 6, 5));
+                setStatistics(statisticsResponse);
+            } catch (e) {
+                setError(e);
+            }
         })();
     }, []);
 
     if (!statistics) {
-        return <div>Loading...</div>
+        return <div>
+            Loading...
+            {error && <Alert severity="error">{error}</Alert>}
+        </div>
     }
     return (
         <div className="dashboard">
-            <Typography className="header" variant="h2">Статистика</Typography>
+            <Typography className="section-header" variant="h2">Статистика</Typography>
             <div className="section">
                 <div className="charts">
                     <div className="incomes-chart-container full">
@@ -58,6 +68,7 @@ export const DashboardSection = () => {
                     </DashboardCard>
                 </div>
             </div>
+            {error && <Alert severity="error">{error}</Alert>}
         </div>
     )
 

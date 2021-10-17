@@ -9,6 +9,7 @@ export interface IAccommodation {
 	id: number,
 	quantity: number,
 	price: number,
+	comment: string,
 }
 
 export interface AccommodationInfo {
@@ -21,6 +22,7 @@ export interface AccommodationInfo {
 	price: number,
 	roomName: string,
 	roomId: number,
+	comment: string,
 }
 
 export interface RoomAccommodationsHistory {

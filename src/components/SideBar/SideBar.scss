@@ -1,5 +1,14 @@
 @import "../../styles/variables";
 
+.section-header {
+  font-size: 42px;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: bold;
+  margin-bottom: 1em;
+
+  color: $side-bar-logo-color;
+}
+
 .side-bar {
   background-color: $side-bar-color;
   display: flex;

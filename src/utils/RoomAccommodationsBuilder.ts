@@ -12,5 +12,6 @@ export const toAccommodationInfo = (accommodation: IAccommodation): Accommodatio
         roomId: accommodation.room.id,
         roomName: accommodation.room.name,
         daysLeft: differenceInDays(accommodation.endDate, accommodation.startDate),
+        comment: accommodation.comment,
     }
 }

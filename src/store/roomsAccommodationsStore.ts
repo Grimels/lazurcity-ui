@@ -45,16 +45,31 @@ export const updateRoomAccommodation = createAsyncThunk<{
     startDate: Date,
     endDate: Date,
     quantity: number,
-    price: number
+    price: number,
+    clientName: string,
+    clientPhoneNumber: string,
+    comment: string,
 }, {
     accommodationId: number,
     startDate: Date,
     endDate: Date,
     quantity: number,
-    price: number
-}>(UPDATE_ACCOMMODATION_ACTION, async ({accommodationId, startDate, endDate, quantity, price}) => {
-    await AccommodationsDataService.updateAccommodation(accommodationId, startDate, endDate, quantity, price);
-    return {accommodationId, startDate, endDate, quantity, price};
+    price: number,
+    clientName: string,
+    clientPhoneNumber: string,
+    comment: string,
+}>(UPDATE_ACCOMMODATION_ACTION, async ({
+                                           accommodationId,
+                                           startDate,
+                                           endDate,
+                                           quantity,
+                                           price,
+                                           clientName,
+                                           clientPhoneNumber,
+                                           comment,
+                                       }) => {
+    await AccommodationsDataService.updateAccommodation(accommodationId, startDate, endDate, quantity, price, clientName, clientPhoneNumber, comment);
+    return {accommodationId, startDate, endDate, quantity, price, clientName, clientPhoneNumber, comment};
 });
 
 const CREATE_ACCOMMODATION_ACTION = 'rooms/createAccommodation';
@@ -65,7 +80,8 @@ export const createRoomAccommodation = createAsyncThunk<IAccommodation, {
     startDate: Date,
     endDate: Date,
     quantity: number,
-    price: number
+    price: number,
+    comment: string,
 }>(CREATE_ACCOMMODATION_ACTION, async ({
                                            roomId,
                                            clientName,
@@ -73,9 +89,10 @@ export const createRoomAccommodation = createAsyncThunk<IAccommodation, {
                                            startDate,
                                            endDate,
                                            quantity,
-                                           price
+                                           price,
+                                           comment,
                                        }) => {
-    return await AccommodationsDataService.createAccommodation(roomId, clientName, clientPhoneNumber, startDate, endDate, quantity, price);
+    return await AccommodationsDataService.createAccommodation(roomId, clientName, clientPhoneNumber, startDate, endDate, quantity, price, comment);
 });
 
 const DELETE_ACCOMMODATION_ACTION = 'rooms/deleteAccommodation';
@@ -125,6 +142,8 @@ export const roomsAccommodationsHistoryStore = createSlice({
 
             const updatedAccommodation = {...searchedAccommodation, ...payload};
             updatedAccommodation.daysLeft = differenceInDays(updatedAccommodation.endDate, updatedAccommodation.startDate);
+            if (payload.clientName) updatedAccommodation.client.name = payload.clientName;
+            if (payload.clientPhoneNumber) updatedAccommodation.client.phoneNumber = payload.clientPhoneNumber;
             history[roomIndex].accommodations.push(updatedAccommodation);
         });
         builder.addCase(createRoomAccommodation.fulfilled, (state, {payload: accommodation}) => {

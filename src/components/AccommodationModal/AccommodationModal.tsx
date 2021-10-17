@@ -35,6 +35,7 @@ export interface UpdateAccommodationProps extends AccommodationModalProps {
     price: number;
     clientName: string;
     clientPhoneNumber: string;
+    comment: string;
     updateAccommodation: (props: UpdateAccommodationActionProps) => void,
     deleteAccommodation: (accommodationId: number) => void,
 }

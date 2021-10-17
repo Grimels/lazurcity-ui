@@ -8,14 +8,6 @@
   flex-direction: column;
   align-items: start;
 
-  .header {
-    font-size: 42px;
-    font-weight: bold;
-    margin-bottom: 1em;
-
-    color: $side-bar-logo-color;
-  }
-
   .section {
     display: flex;
     justify-content: space-between;

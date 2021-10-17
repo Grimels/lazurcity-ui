@@ -18,7 +18,7 @@ export interface FormEndDateProps extends FormDateProps {
     isDisabled: boolean,
 }
 
-export type AccommodationFormControl = Control<{ fromDate: Date; toDate: Date; quantity: number; price: number; clientName: string; clientPhoneNumber: string; }, object>
+export type AccommodationFormControl = Control<{ fromDate: Date; toDate: Date; quantity: number; price: number; clientName: string; clientPhoneNumber: string; comment: string; }, object>
 
 export const renderFromDatePicker = (control: AccommodationFormControl, props: FormStartDateProps) => (
     <Controller

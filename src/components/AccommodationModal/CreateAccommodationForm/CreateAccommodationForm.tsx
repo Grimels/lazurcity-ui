@@ -26,9 +26,10 @@ export const CreateAccommodationForm: React.FC<CreateAccommodationProps> = (prop
             price: 100,
             clientName: '',
             clientPhoneNumber: '',
+            comment: '',
         }
     });
-    const {clientName, clientPhoneNumber, fromDate, toDate, quantity, price} = watch();
+    const {clientName, clientPhoneNumber, fromDate, toDate, quantity, price, comment} = watch();
 
     const onSave = async () => {
         props.createAccommodation({
@@ -39,6 +40,7 @@ export const CreateAccommodationForm: React.FC<CreateAccommodationProps> = (prop
             endDate: toDate,
             quantity: Number(quantity),
             price: Number(price),
+            comment,
         });
     }
 
@@ -66,7 +68,7 @@ export const CreateAccommodationForm: React.FC<CreateAccommodationProps> = (prop
                                    className="row-input"
                                    type="text"
                                    error={!!getErrors('clientName')}
-                                   {...register("clientName", {required: true, minLength: 3})}
+                                   {...register("clientName", {required: !clientPhoneNumber, minLength: 3})}
                             />
                             {!!getErrors('clientName') &&
                             <FormHelperText id="clientName-helper" error>Обязательное поле.</FormHelperText>}
@@ -103,7 +105,7 @@ export const CreateAccommodationForm: React.FC<CreateAccommodationProps> = (prop
                                    className="row-input"
                                    type="text"
                                    error={!!getErrors('clientPhoneNumber')}
-                                   {...register("clientPhoneNumber", {required: true, minLength: 5})}
+                                   {...register("clientPhoneNumber", {required: !clientName, minLength: 5})}
                             />
                             {!!getErrors('clientPhoneNumber') &&
                             <FormHelperText id="clientPhoneNumber-helper" error>Обязательное поле.</FormHelperText>}
@@ -121,6 +123,19 @@ export const CreateAccommodationForm: React.FC<CreateAccommodationProps> = (prop
                         </FormControl>
                     </div>
                 </div>
+                <div className="comment-section">
+                    <FormControl className="input-item comment">
+                        <InputLabel htmlFor="price">Комментарий</InputLabel>
+                        <Input id="comment"
+                               className="row-input"
+                               type="text"
+                               multiline
+                               maxRows={4}
+                               {...register("comment")}
+                        />
+                    </FormControl>
+                </div>
+                <br/>
                 <Typography variant="caption"
                             className="calculation">{calculateTotalPriceText(fromDate, toDate, price)}</Typography>
             </CardContent>

@@ -17,7 +17,8 @@ const createAccommodation: (roomId: number,
                             startDate: Date,
                             endDate: Date,
                             quantity: number,
-                            price: number) => Promise<IAccommodation> = (roomId, clientName, clientPhoneNumber, startDate, endDate, quantity, price) => {
+                            price: number,
+                            comment: string) => Promise<IAccommodation> = (roomId, clientName, clientPhoneNumber, startDate, endDate, quantity, price, comment) => {
     const requestBody = {
         roomId,
         clientName,
@@ -26,6 +27,7 @@ const createAccommodation: (roomId: number,
         endDate: formatDate(endDate),
         quantity,
         price,
+        comment,
         isFinal: true
     };
     return fetch(`${API}/accommodations`, {
@@ -41,8 +43,11 @@ const updateAccommodation: (accommodationId: number,
                             startDate: Date,
                             endDate: Date,
                             quantity: number,
-                            price: number) => void = (accommodationId, startDate, endDate, quantity, price) => {
-    const requestBody = {startDate: formatDate(startDate), endDate: formatDate(endDate), quantity, price};
+                            price: number,
+                            clientName: string,
+                            clientPhoneNumber: string,
+                            comment: string) => void = (accommodationId, startDate, endDate, quantity, price, clientName, clientPhoneNumber, comment) => {
+    const requestBody = {startDate: formatDate(startDate), endDate: formatDate(endDate), quantity, price, clientName, clientPhoneNumber, comment};
     return fetch(`${API}/accommodations/${accommodationId}`, {
         method: 'PUT',
         body: JSON.stringify(requestBody),

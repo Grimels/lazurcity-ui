@@ -12,6 +12,7 @@ class Parser {
 	
 	parseResponseClientModel = (client: IClient): IClient => {
 		return {
+			id: client.id,
 			name: client.name,
 			phoneNumber: client.phoneNumber,
 			comment: client.comment,
@@ -27,6 +28,7 @@ class Parser {
 			endDate: new Date(accommodation.endDate),
 			quantity: accommodation.quantity,
 			price: accommodation.price,
+			comment: accommodation.comment,
 		}
 	}
 	
@@ -77,6 +79,7 @@ class Parser {
 			quantity: accommodationDay.quantity,
 			roomName: accommodationDay.roomName,
 			roomId: accommodationDay.roomId,
+			comment: accommodationDay.comment,
 		}
 	}
 

@@ -25,7 +25,7 @@
 
 .creation-card {
   width: 40vw;
-  height: 50vh;
+  height: 60vh;
   padding: 2vh 2vw;
 
   margin: 10% auto;
@@ -53,6 +53,15 @@
 
       .input-item {
         margin: 0.5em 0;
+      }
+    }
+
+    .input-item {
+      margin: 0.5em 0;
+
+      &.comment {
+        margin: 0 1em;
+        display: flex;
       }
     }
   }

@@ -45,6 +45,7 @@ type AccommodationInfoType =
     roomName: string,
     roomId: number,
     clientPhoneNumber: string,
+    comment: string,
     updateAccommodation: (props: UpdateAccommodationActionProps) => void,
     deleteAccommodation: (accommodationId: number) => void
 };
@@ -96,6 +97,7 @@ export const CalendarTableBody: React.FC<CalendarTableBodyProps> = ({
             clientPhoneNumber: accommodation.client.phoneNumber,
             quantity: accommodation.quantity,
             price: accommodation.price,
+            comment: accommodation.comment,
             nextAccommodationDate,
             updateAccommodation: handleUpdate,
             deleteAccommodation: handleDelete,

@@ -26,9 +26,10 @@ export const UpdateAccommodationForm: React.FC<UpdateAccommodationProps> = (prop
             price: props.price,
             clientName: props.clientName,
             clientPhoneNumber: props.clientPhoneNumber,
+            comment: props.comment,
         }
     });
-    const {fromDate, toDate, quantity, price} = watch();
+    const {fromDate, toDate, quantity, price, clientName, clientPhoneNumber, comment} = watch();
 
     const onUpdate = async () => {
         props.updateAccommodation({
@@ -37,6 +38,9 @@ export const UpdateAccommodationForm: React.FC<UpdateAccommodationProps> = (prop
             endDate: toDate,
             quantity: Number(quantity),
             price: Number(price),
+            clientName,
+            clientPhoneNumber,
+            comment,
         });
     }
 
@@ -61,6 +65,17 @@ export const UpdateAccommodationForm: React.FC<UpdateAccommodationProps> = (prop
                                 required: true,
                                 maxDate: subDays(toDate, 1)
                             })}
+                        </FormControl>
+                        <FormControl className="input-item">
+                            <InputLabel htmlFor="clientName">Клиент</InputLabel>
+                            <Input id="clientName"
+                                   className="row-input"
+                                   type="text"
+                                   error={!!getErrors('clientName')}
+                                   {...register("clientName", {required: !clientPhoneNumber, minLength: 3})}
+                            />
+                            {!!getErrors('clientName') &&
+                            <FormHelperText id="clientName-helper" error>Обязательное поле.</FormHelperText>}
                         </FormControl>
                         <FormControl className="input-item">
                             <InputLabel htmlFor="quantity">Количество</InputLabel>
@@ -89,6 +104,17 @@ export const UpdateAccommodationForm: React.FC<UpdateAccommodationProps> = (prop
                             })}
                         </FormControl>
                         <FormControl className="input-item">
+                            <InputLabel htmlFor="clientPhoneNumber">Номер Телефона</InputLabel>
+                            <Input id="clientPhoneNumber"
+                                   className="row-input"
+                                   type="text"
+                                   error={!!getErrors('clientPhoneNumber')}
+                                   {...register("clientPhoneNumber", {required: !clientName, minLength: 5})}
+                            />
+                            {!!getErrors('clientPhoneNumber') &&
+                            <FormHelperText id="clientPhoneNumber-helper" error>Обязательное поле.</FormHelperText>}
+                        </FormControl>
+                        <FormControl className="input-item">
                             <InputLabel htmlFor="price">Цена (за номер/сутки)</InputLabel>
                             <Input id="price"
                                    className="row-input"
@@ -101,6 +127,19 @@ export const UpdateAccommodationForm: React.FC<UpdateAccommodationProps> = (prop
                         </FormControl>
                     </div>
                 </div>
+                <div className="comment-section">
+                    <FormControl className="input-item comment">
+                        <InputLabel htmlFor="price">Комментарий</InputLabel>
+                        <Input id="comment"
+                               className="row-input"
+                               type="text"
+                               multiline
+                               maxRows={4}
+                               {...register("comment")}
+                        />
+                    </FormControl>
+                </div>
+                <br/>
                 <Typography variant="caption"
                             className="calculation">{calculateTotalPriceText(fromDate, toDate, price)}</Typography>
             </CardContent>
