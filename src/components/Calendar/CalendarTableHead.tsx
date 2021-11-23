@@ -12,44 +12,49 @@ export interface CalendarTableHeadProps {
 }
 
 export const CalendarTableHead: React.FC<CalendarTableHeadProps> = ({ year, dayRange, currentDayRef }) => {
+    const months = [...new Set(dayRange.map(day => day.getMonth()))];
+
+    const renderTableHeadMonth: (month: number) => JSX.Element = (month) => {
+        const defaultDate = new Date(year, month);
+        return (
+            <TableCell key={`month-${month}`}
+                       align="center"
+                       className='accommodation-cell month'
+                       colSpan={lastDayOfMonth(defaultDate).getDate()}>
+                {RU_MONTH_NAME_BY_NUMBER[month]}
+            </TableCell>
+        );
+    }
 
     const renderTableHeadMonths: () => JSX.Element = () => {
-        const monthSet = [...new Set(dayRange.map(day => day.getMonth()))];
         return (
             <TableRow>
                 <TableCell align="center" className="accommodation-cell"> </TableCell>
-                {monthSet.map((month) => {
-                    const defaultDate = new Date(year, month);
-                    return (
-                        <TableCell key={`month-${month}`}
-                                   align="center"
-                                   className='accommodation-cell month'
-                                   colSpan={lastDayOfMonth(defaultDate).getDate()}>
-                            {RU_MONTH_NAME_BY_NUMBER[month]}
-                        </TableCell>
-                    )
-                })}
+                {months.map(renderTableHeadMonth)}
             </TableRow>
+        );
+    }
+
+    const renderTableHeadCellInDayRange: (day: Date, index: number) => JSX.Element = (day, index) => {
+        const isToday = equalsDates(day, new Date());
+        return (
+            <TableCell key={`room-${day.getTime()}`}
+                       align="center"
+                       ref={isToday ? currentDayRef : undefined}
+                       data-tableIndex={index}
+                       className={`${getAccommodationCellClass(day)} ${isToday ? 'today' : ''}`}>
+                {day.getDate()}
+            </TableCell>
         );
     }
 
     const renderTableHeadCell: () => JSX.Element = () => {
         return (
             <TableRow>
-                <TableCell align="center" className="accommodation-cell fixed-column"> </TableCell>
-                {dayRange.map((day, index) => {
-                    const isToday = equalsDates(day, new Date());
-
-                    return (
-                        <TableCell key={`room-${day.getTime()}`}
-                                   align="center"
-                                   ref={isToday ? currentDayRef : undefined}
-                                   data-tableIndex={index}
-                                   className={`${getAccommodationCellClass(day)} ${isToday ? 'today' : ''}`}>
-                            {day.getDate()}
-                        </TableCell>
-                    )
-                })}
+                <TableCell align="center" className="accommodation-cell fixed-column markers">
+                    <span className="arg-1">№</span> <span className="arg-2">День <hr /></span>
+                </TableCell>
+                {dayRange.map(renderTableHeadCellInDayRange)}
             </TableRow>
         );
     }

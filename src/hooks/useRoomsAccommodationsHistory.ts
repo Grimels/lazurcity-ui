@@ -9,6 +9,8 @@ import {
     updateRoomAccommodation,
 } from '../store/roomsAccommodationsStore';
 import { equalsDates } from '../utils/equals';
+import { fetchRooms } from '../store/roomStore';
+import { RawAccommodationInfo } from '../types/accommodation';
 
 export interface UpdateAccommodationActionProps {
     accommodationId: number,
@@ -21,22 +23,11 @@ export interface UpdateAccommodationActionProps {
     comment: string,
 }
 
-export interface CreateAccommodationActionProps {
-    roomId: number,
-    clientName: string,
-    clientPhoneNumber: string,
-    startDate: Date,
-    endDate: Date,
-    quantity: number,
-    price: number,
-    comment: string,
-}
-
 export const useRoomsAccommodationsHistory: (startDate: Date, endDate: Date) => {
     store: RoomsAccommodationsStoreType,
     refresh: () => void,
-    createAccommodation: (props: CreateAccommodationActionProps) => void,
-    updateAccommodation: (props: UpdateAccommodationActionProps) => void,
+    createAccommodation: (props: Partial<RawAccommodationInfo>) => void,
+    updateAccommodation: (props: Partial<RawAccommodationInfo>) => void,
     deleteAccommodation: (accommodationId: number) => void,
 } = (startDate, endDate) => {
     const store: RoomsAccommodationsStoreType = useSelector((store: IStore) => store.roomsAccommodationsHistory);
@@ -49,37 +40,45 @@ export const useRoomsAccommodationsHistory: (startDate: Date, endDate: Date) => 
         }
     }, [dispatch, startDate, endDate, store.status]);
 
-    const refresh = () => dispatch(fetchRoomsAccommodationsHistory({startDate, endDate}));
-    const updateAccommodation: (props: UpdateAccommodationActionProps) => void = ({
-                                                                                      accommodationId,
-                                                                                      startDate,
-                                                                                      endDate,
-                                                                                      quantity,
-                                                                                      price,
-                                                                                      clientName,
-                                                                                      clientPhoneNumber,
-                                                                                      comment,
-                                                                                  }) =>
+    const refresh = () => {
+        dispatch(fetchRoomsAccommodationsHistory({startDate, endDate}));
+        dispatch(fetchRooms());
+    }
+    const updateAccommodation: (props: Partial<RawAccommodationInfo>) => void = ({
+                                                                                     id,
+                                                                                     startDate,
+                                                                                     endDate,
+                                                                                     quantity,
+                                                                                     price,
+                                                                                     clientName,
+                                                                                     clientPhoneNumber,
+                                                                                     isFinal,
+                                                                                     comment,
+                                                                                 }) => {
         dispatch(updateRoomAccommodation({
-            accommodationId,
+            accommodationId: id,
             startDate,
             endDate,
             quantity,
             price,
             clientName,
             clientPhoneNumber,
+            isFinal,
             comment,
         }));
-    const createAccommodation: (props: CreateAccommodationActionProps) => void = ({
-                                                                                      roomId,
-                                                                                      clientName,
-                                                                                      clientPhoneNumber,
-                                                                                      startDate,
-                                                                                      endDate,
-                                                                                      quantity,
-                                                                                      price,
-                                                                                      comment,
-                                                                                  }) =>
+        dispatch(fetchRooms());
+    }
+    const createAccommodation: (props: Partial<RawAccommodationInfo>) => void = ({
+                                                                                     roomId,
+                                                                                     clientName,
+                                                                                     clientPhoneNumber,
+                                                                                     startDate,
+                                                                                     endDate,
+                                                                                     quantity,
+                                                                                     price,
+                                                                                     isFinal,
+                                                                                     comment,
+                                                                                 }) => {
         dispatch(createRoomAccommodation({
             roomId,
             clientName,
@@ -88,9 +87,14 @@ export const useRoomsAccommodationsHistory: (startDate: Date, endDate: Date) => 
             endDate,
             quantity,
             price,
+            isFinal,
             comment,
         }));
-    const deleteAccommodation: (accommodationId: number) => void = (accommodationId) =>
+        dispatch(fetchRooms());
+    }
+    const deleteAccommodation: (accommodationId: number) => void = (accommodationId) => {
         dispatch(deleteRoomAccommodation(accommodationId));
+        dispatch(fetchRooms());
+    }
     return {refresh, createAccommodation, updateAccommodation, deleteAccommodation, store};
 };

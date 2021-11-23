@@ -1,6 +1,7 @@
 import { getColorLine } from '../../utils/getColorLine';
+import * as Chart from 'chart.js';
 
-export const getTopAccommodationIncomesData = (incomesByKey: Map<string, number>) => {
+export const getTopAccommodationIncomesData = (incomesByKey: Map<string, number>, keyPrefix = '') => {
     const incomesByKeyArr = [...incomesByKey.entries()]
         .sort((a, b) => a[1] - b[1] == 0 ? 0 : (a[1] - b[1] > 0 ? -1 : 1));
     const topIncomes = incomesByKeyArr.slice(0, 7);
@@ -8,8 +9,8 @@ export const getTopAccommodationIncomesData = (incomesByKey: Map<string, number>
         .reduce((accumulator, currentIncomes) => accumulator + currentIncomes[1], 0);
 
     const keys: string[] = incomesByKeyArr.length > 4
-        ? [...topIncomes.map(topIncome => topIncome[0]), 'Остальные']
-        : [...topIncomes.map(topIncome => topIncome[0])];
+        ? [...topIncomes.map(topIncome => keyPrefix + topIncome[0]), 'Остальные']
+        : [...topIncomes.map(topIncome => keyPrefix + topIncome[0])];
     const incomes: number[] = incomesByKeyArr.length > 4
         ? [...topIncomes.map(topIncome => topIncome[1]), etcIncomes]
         : [...topIncomes.map(topIncome => topIncome[1])];
@@ -27,7 +28,7 @@ export const getTopAccommodationIncomesData = (incomesByKey: Map<string, number>
     }
 }
 
-export const getIncomesByMonthChart = (incomesByMonth: Map<string, number>) => {
+export const getIncomesByMonthChart = (incomesByMonth: Map<string, number>): Chart.ChartData => {
     const entries = [...incomesByMonth.entries()]
         .sort(([dataKey1], [dataKey2]) => {
             const [day1, month1] = dataKey1.split('.').map(item => Number(item));
@@ -54,7 +55,7 @@ export const getIncomesByMonthChart = (incomesByMonth: Map<string, number>) => {
         labels: resultX,
         datasets: [
             {
-                label: 'Ежедневный доход',
+                label: 'Дневной доход',
                 data: resultY,
                 fill: false,
                 backgroundColor: 'rgb(255, 99, 132)',

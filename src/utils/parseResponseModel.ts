@@ -9,7 +9,7 @@ import { IClient } from '../types/client';
 import { dateInRange } from './equals';
 
 class Parser {
-	
+
 	parseResponseClientModel = (client: IClient): IClient => {
 		return {
 			id: client.id,
@@ -18,7 +18,7 @@ class Parser {
 			comment: client.comment,
 		}
 	}
-	
+
 	parseResponseAccommodationModel = (accommodation: IAccommodation): IAccommodation => {
 		return {
 			id: accommodation.id,
@@ -29,9 +29,10 @@ class Parser {
 			quantity: accommodation.quantity,
 			price: accommodation.price,
 			comment: accommodation.comment,
+			isFinal: accommodation.isFinal,
 		}
 	}
-	
+
 	parseResponseRoomModel = (room: IRoom): IRoom => {
 		return {
 			id: Number(room.id),
@@ -42,12 +43,12 @@ class Parser {
 			accommodations: room.accommodations?.map(accommodation => this.parseResponseAccommodationModel(accommodation)),
 		}
 	}
-	
+
 	parseResponseAccommodationHistoryModel = (roomAccommodationsHistory: RoomAccommodationsHistory): RoomAccommodationsHistory => {
 		return {
 			startRange: new Date(roomAccommodationsHistory.startRange),
 			endRange: new Date(roomAccommodationsHistory.endRange),
-			
+
 			room: this.parseResponseRoomInfo(
 				roomAccommodationsHistory.room,
 				new Date(roomAccommodationsHistory.startRange),
@@ -57,7 +58,7 @@ class Parser {
 				.map((accommodation) => this.parseResponseAccommodationDayModel(accommodation)),
 		}
 	}
-	
+
 	parseResponseRoomInfo = (roomInfo: IRoomProjection, startDate: Date, endDate: Date): IRoomProjection => {
 		return {
 			id: roomInfo.id,
@@ -67,7 +68,7 @@ class Parser {
 			isBusy: dateInRange(new Date(), startDate, endDate),
 		}
 	}
-	
+
 	parseResponseAccommodationDayModel = (accommodationDay: AccommodationInfo): AccommodationInfo => {
 		return {
 			id: accommodationDay.id,
@@ -80,6 +81,7 @@ class Parser {
 			roomName: accommodationDay.roomName,
 			roomId: accommodationDay.roomId,
 			comment: accommodationDay.comment,
+			isFinal: accommodationDay.isFinal,
 		}
 	}
 
@@ -90,6 +92,7 @@ class Parser {
 			busyRooms: statistics.busyRooms,
 			freeRooms: statistics.freeRooms,
 			roomsLeavingToday: statistics.roomsLeavingToday,
+			totalSeasonIncome: statistics.totalSeasonIncome,
 			seasonIncomeByRoomName: new Map(Object.entries(statistics.seasonIncomeByRoomName)),
 			seasonIncomeByRoomCategory: new Map(Object.entries(statistics.seasonIncomeByRoomCategory)),
 			incomesByKey: new Map(Object.entries(statistics.incomesByKey).map(([key, value]) => [String(key), Number(value)])),

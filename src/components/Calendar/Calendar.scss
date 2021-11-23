@@ -1,6 +1,10 @@
 $cell-size: 10px;
 $week-end-bg-color: #e7eff5;
 
+.error-alert {
+  position: absolute;
+}
+
 .table-wrapper {
   overflow-x: scroll;
   margin: auto;
@@ -27,6 +31,25 @@ $week-end-bg-color: #e7eff5;
       border-top: 1px solid black;
       border-bottom: 1px solid black;
       z-index: 2;
+    }
+
+    .markers {
+      .arg-1 {
+        position: absolute;
+        bottom: -4px;
+        left: 8px;
+      }
+
+      .arg-2 {
+        position: absolute;
+        top: -2px;
+        left: 5px;
+        transform: rotate(30deg);
+
+        hr {
+          margin-top: 0;
+        }
+      }
     }
   }
 }
@@ -70,18 +93,29 @@ $week-end-bg-color: #e7eff5;
     font-weight: bold;
   }
 
+  .blocker-wrap {
+    position: absolute;
+    padding: 1.5em;
+    top: -7.5px;
+  }
+
   & > .accommodation-line {
     padding: 0;
     margin: 0;
-    position: sticky;
+    width: inherit;
 
     display: flex;
     justify-content: center;
     align-items: stretch;
 
-    width: calc(#{$cell-size} + 80);
     height: 1.75em;
     transform: skew(-20deg);
+
+    .label.end {
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 5%;
+    }
   }
 
 }

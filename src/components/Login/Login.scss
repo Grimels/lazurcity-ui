@@ -1,0 +1,34 @@
+.login-wrapper {
+  width: 25em;
+  height: 22em;
+  margin: 10em auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid black;
+  border-radius: 5%;
+
+  .login-form {
+    width: 90%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: stretch;
+  }
+
+  .input-item, .btn-login, .login-wrapper-header {
+    margin: 1em auto;
+  }
+
+  .input-item {
+    width: inherit;
+
+    .row-input, .row-label{
+      width: inherit;
+    }
+  }
+}
