@@ -8,36 +8,40 @@ import { AccommodationConfig, getConfig } from './config';
 import { AccommodationInfo, RawAccommodationInfo } from '../../types/accommodation';
 import { addDays, differenceInDays } from 'date-fns';
 import { AccommodationForm } from './AccommodationForm';
+import { IRoomProjection } from '../../types/room';
 
 interface AccommodationModalProps {
     type: 'create' | 'update',
-    open: boolean;
-    onClose: () => void;
-    roomName: string;
-    roomId: number;
-    dateLimit: Date;
+
+    dateLimit: Date,
+    room: IRoomProjection,
 }
 
-export interface CreateAccommodationProps extends AccommodationModalProps {
+export interface AccommodationModalCreateProps extends AccommodationModalProps {
     type: 'create',
-    day: Date;
+
+    day: Date,
     createAccommodation: (props: Partial<RawAccommodationInfo>) => void,
 }
 
-export interface UpdateAccommodationProps extends AccommodationModalProps {
+export interface AccommodationModalUpdateProps extends AccommodationModalProps {
     type: 'update',
+
     accommodation: AccommodationInfo,
     updateAccommodation: (props: Partial<RawAccommodationInfo>) => void,
-    deleteAccommodation: (accommodationId: number) => void,
+    deleteAccommodation: (accommodationId: number) => void
 }
 
-export const AccommodationModal: React.FC<CreateAccommodationProps | UpdateAccommodationProps> = (props) => {
-    const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
+type AccommodationModalType = AccommodationModalCreateProps | AccommodationModalUpdateProps;
 
-    const getCreateConfig = (createProps: CreateAccommodationProps) => getConfig({
+export const AccommodationModal: React.FC<AccommodationModalType & { open: boolean, onClose: () => void }> = (props) => {
+    const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
+    const { room: { name: roomName, id: roomId }, dateLimit } = props;
+
+    const getCreateConfig = (createProps: AccommodationModalCreateProps) => getConfig({
         type: 'create',
         CONFIRM: createProps.createAccommodation,
-        CANCEL: createProps.onClose,
+        CANCEL: props.onClose,
         defaultProps: {
             startDate: createProps.day,
             endDate: differenceInDays(createProps.dateLimit, createProps.day) >= 3
@@ -45,38 +49,50 @@ export const AccommodationModal: React.FC<CreateAccommodationProps | UpdateAccom
                 : createProps.dateLimit
         }
     });
-    const getUpdateConfig = (updateProps: UpdateAccommodationProps) => getConfig({
+
+    const getUpdateConfig = (updateProps: AccommodationModalUpdateProps) => getConfig({
         type: 'update',
         CONFIRM: (accommodationData) =>
             updateProps.updateAccommodation({ id: updateProps.accommodation.id, ...accommodationData }),
-        CANCEL: updateProps.onClose,
+        CANCEL: props.onClose,
         DELETE: () => setConfirmationModalOpen(true),
         accommodation: updateProps.accommodation,
     });
 
-    const config: AccommodationConfig = props.type === 'create' ? getCreateConfig(props) : getUpdateConfig(props);
+    const createFormConfig: () => AccommodationConfig = () => {
+        switch (props.type) {
+            default:
+            case 'create': return getCreateConfig(props);
+            case 'update': return getUpdateConfig(props);
+        }
+    }
+
+    const renderConfirmationModalForDeleteAction = (onConfirm: () => void) => (
+        <Modal open={confirmationModalOpen} onClose={() => setConfirmationModalOpen(false)}>
+            <Card className="confirmation-card">
+                <Typography>Пожалуйста, подтвердите удаление заселения:</Typography>
+                <CardActions className="create-actions">
+                    <Button color="default" onClick={() => setConfirmationModalOpen(false)}>Нет</Button>
+                    <Button color="primary" variant="contained"
+                            onClick={onConfirm}>Да</Button>
+                </CardActions>
+            </Card>
+        </Modal>
+    );
+
+    const createDeleteAccommodationAction = (updateProps: AccommodationModalUpdateProps) =>
+        () => updateProps.deleteAccommodation(updateProps.accommodation.id)
 
     return (
         <>
             <Modal open={props.open} onClose={props.onClose} className="accommodation-modal">
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Card className="creation-card">
-                        <AccommodationForm config={config} roomId={props.roomId} roomName={props.roomName} dateLimit={props.dateLimit} />
+                        <AccommodationForm config={createFormConfig()} roomId={roomId} roomName={roomName} dateLimit={dateLimit} />
                     </Card>
                 </MuiPickersUtilsProvider>
             </Modal>
-            {props.type === 'update' &&
-                <Modal open={confirmationModalOpen} onClose={() => setConfirmationModalOpen(false)}>
-                    <Card className="confirmation-card">
-                        <Typography>Пожалуйста, подтвердите удаление заселения:</Typography>
-                        <CardActions className="create-actions">
-                            <Button color="default" onClick={() => setConfirmationModalOpen(false)}>Нет</Button>
-                            <Button color="primary" variant="contained"
-                                    onClick={() => props.deleteAccommodation(props.accommodation.id)}>Да</Button>
-                        </CardActions>
-                    </Card>
-                </Modal>
-            }
+            {props.type === 'update' && renderConfirmationModalForDeleteAction(createDeleteAccommodationAction(props))}
         </>
     )
 }

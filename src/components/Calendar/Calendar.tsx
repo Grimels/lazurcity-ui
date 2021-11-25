@@ -1,67 +1,40 @@
 import * as React from 'react';
 import { useEffect, useMemo } from 'react';
-import { CircularProgress, Table } from '@material-ui/core';
+import { Table } from '@material-ui/core';
 
 import './Calendar.scss';
-import { STATUS } from '../../constants/api';
 import { eachDayOfInterval } from "date-fns";
 import { CalendarTableHead } from './CalendarTableHead';
-import { useRoomsAccommodationsHistory } from '../../hooks/useRoomsAccommodationsHistory';
 import { CalendarTableBody } from './CalendarTableBody';
-import { useClients } from '../../hooks/useClients';
-import { Alert } from '@material-ui/lab';
+import { IRoomProjection } from '../../types/room';
+import { AccommodationInfo } from '../../types/accommodation';
+import { RoomsAccommodationsHistoryStore } from '../../store/roomsAccommodationsStore';
 
 export interface CalendarProps {
     startDate: Date,
     endDate: Date,
+    history: RoomsAccommodationsHistoryStore,
+    onEmptyCellClick: (day: Date, dateLimit: Date, room: IRoomProjection) => void,
+    onAccommodationClick: (accommodation: AccommodationInfo, dateLimit: Date, room: IRoomProjection) => void,
 }
 
-export const Calendar: React.FC<CalendarProps> = ({startDate, endDate}) => {
-    useClients();
-    const {
-        store: roomsAccommodationsHistory,
-        createAccommodation,
-        updateAccommodation,
-        deleteAccommodation,
-    } = useRoomsAccommodationsHistory(startDate, endDate);
-
+export const Calendar: React.FC<CalendarProps> = (props) => {
     const currentDayRef = React.createRef<HTMLTableHeaderCellElement>();
     useEffect(() => {
         currentDayRef?.current?.scrollIntoView({inline: 'center'});
     }, [currentDayRef.current])
 
     const dayRange: Array<Date> = useMemo(() => (eachDayOfInterval({
-        start: startDate,
-        end: endDate
-    })), [startDate, endDate]);
+        start: props.startDate,
+        end: props.endDate
+    })), [props]);
 
-    switch (roomsAccommodationsHistory.status) {
-        case STATUS.LOADING:
-            return <CircularProgress color="primary"/>;
-        case STATUS.ERROR:
-            return (
-                <Alert className="error-alert" severity="error">
-                    {roomsAccommodationsHistory.error.name}: {roomsAccommodationsHistory.error.message}
-                </Alert>);
-        default:
-            const calendarTableProps = {
-                createAccommodation,
-                updateAccommodation,
-                deleteAccommodation,
-
-                dayRange,
-                startDate,
-                endDate,
-                history: roomsAccommodationsHistory,
-            }
-            return (
-                <div className="table-wrapper">
-                    <Table>
-                        <CalendarTableHead year={startDate.getFullYear()} dayRange={dayRange}
-                                           currentDayRef={currentDayRef}/>
-                        <CalendarTableBody {...calendarTableProps} />
-                    </Table>
-                </div>
-            );
-    }
+    return (
+        <div className="table-wrapper">
+            <Table>
+                <CalendarTableHead year={props.startDate.getFullYear()} dayRange={dayRange} currentDayRef={currentDayRef}/>
+                <CalendarTableBody dayRange={dayRange} {...props} />
+            </Table>
+        </div>
+    );
 }

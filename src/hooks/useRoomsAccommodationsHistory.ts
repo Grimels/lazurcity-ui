@@ -12,19 +12,8 @@ import { equalsDates } from '../utils/equals';
 import { fetchRooms } from '../store/roomStore';
 import { RawAccommodationInfo } from '../types/accommodation';
 
-export interface UpdateAccommodationActionProps {
-    accommodationId: number,
-    startDate: Date,
-    endDate: Date,
-    quantity: number,
-    price: number,
-    clientName: string,
-    clientPhoneNumber: string,
-    comment: string,
-}
-
 export const useRoomsAccommodationsHistory: (startDate: Date, endDate: Date) => {
-    store: RoomsAccommodationsStoreType,
+    historyStore: RoomsAccommodationsStoreType,
     refresh: () => void,
     createAccommodation: (props: Partial<RawAccommodationInfo>) => void,
     updateAccommodation: (props: Partial<RawAccommodationInfo>) => void,
@@ -96,5 +85,5 @@ export const useRoomsAccommodationsHistory: (startDate: Date, endDate: Date) => 
         dispatch(deleteRoomAccommodation(accommodationId));
         dispatch(fetchRooms());
     }
-    return {refresh, createAccommodation, updateAccommodation, deleteAccommodation, store};
+    return {refresh, createAccommodation, updateAccommodation, deleteAccommodation, historyStore: store};
 };
