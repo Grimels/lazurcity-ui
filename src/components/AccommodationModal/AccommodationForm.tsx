@@ -1,4 +1,19 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
+import {
+    Button,
+    CardActions,
+    CardContent,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    FormHelperText,
+    TextField,
+    Typography
+} from '@material-ui/core';
+import { addDays, subDays } from 'date-fns';
+
+import { calculateTotalPriceText, renderFromDatePicker, renderToDatePicker } from './utils';
 import {
     AccommodationConfig,
     AccommodationConfigActionGroup,
@@ -6,19 +21,6 @@ import {
     FIELD,
     FIELD_TYPE
 } from './config';
-import { useForm, UseFormRegisterReturn } from 'react-hook-form';
-import {
-    Button,
-    CardActions,
-    CardContent, Checkbox,
-    FormControl, FormControlLabel,
-    FormHelperText,
-    Input,
-    InputLabel,
-    Typography
-} from '@material-ui/core';
-import { calculateTotalPriceText, renderFromDatePicker, renderToDatePicker } from './utils';
-import { addDays, subDays } from 'date-fns';
 import { RawAccommodationInfo } from '../../types/accommodation';
 
 export interface AccommodationFormProps {
@@ -30,16 +32,12 @@ export interface AccommodationFormProps {
 
 export const AccommodationForm: React.FC<AccommodationFormProps> = ({config, roomName, roomId, dateLimit}) => {
     const defaultValues: { [key: string]: string | number | Date | boolean } = {};
-    config.fields.forEach(row => row.forEach(field => {
-        defaultValues[field.name] = field.default;
-    }))
-    const {register, handleSubmit, watch, control, formState: {errors}} = useForm({
-        defaultValues,
-    });
+    config.fields
+        .forEach(row => row
+            .forEach(field => defaultValues[field.name] = field.default));
+    const {register, handleSubmit, watch, control, formState: {errors}} = useForm({defaultValues});
     const fields = watch();
-
-    const getErrors = (fieldName: string) =>
-        errors && errors[fieldName];
+    const getErrors = (fieldName: string) => errors && errors[fieldName];
 
     const renderStartDatePicker = (props: AccommodationConfigInputField) => (
         <FormControl className="input-item">
@@ -65,32 +63,35 @@ export const AccommodationForm: React.FC<AccommodationFormProps> = ({config, roo
         </FormControl>
     );
 
+    const getTextHelper = (props: AccommodationConfigInputField) => Boolean(getErrors(props.name))
+        ? (getErrors(props.name).type === 'min' ? `Значение не может быть меньше ${props.min}.` : 'Обязательное поле.')
+        : (props.isRequired && 'Обязательное поле.');
+
     const renderTextInput = (props: AccommodationConfigInputField) => (
         <FormControl className="input-item">
-            <InputLabel htmlFor="clientName">{props.label}</InputLabel>
-            <Input id={props.name}
-                   className="row-input"
-                   type="text"
-                   error={!!getErrors(props.name)}
-                   {...register(props.name, {required: props.isRequired, minLength: 3})}
+            <TextField id={props.name}
+                       className="row-input"
+                       type="text"
+                       error={Boolean(getErrors(props.name))}
+                       variant="outlined"
+                       label={props.label}
+                       helperText={getTextHelper(props)}
+                       {...register(props.name, {required: props.isRequired, minLength: 3})}
             />
-            {!!getErrors(props.name) &&
-            <FormHelperText id={`${props.name}-helper`} error>Обязательное поле.</FormHelperText>}
         </FormControl>
     );
 
     const renderNumberInput = (props: AccommodationConfigInputField) => (
         <FormControl className="input-item">
-            <InputLabel htmlFor="clientName">{props.label}</InputLabel>
-            <Input id={props.name}
-                   className="row-input"
-                   type="number"
-                   error={!!getErrors(props.name)}
-                   {...register(props.name, {required: props.isRequired, min: Number(props.min)})}
+            <TextField id={props.name}
+                       className="row-input"
+                       type="number"
+                       error={Boolean(getErrors(props.name))}
+                       variant="outlined"
+                       label={props.label}
+                       helperText={getTextHelper(props)}
+                       {...register(props.name, {required: props.isRequired, min: Number(props.min)})}
             />
-            {!!getErrors(props.name) && ((!!getErrors(props.name) && getErrors(props.name).type === 'min') ?
-                <FormHelperText id="quantity-helper" error>Значение не может быть меньше {props.min}.</FormHelperText>
-                : <FormHelperText id={`${props.name}-helper`} error>Обязательное поле.</FormHelperText>)}
         </FormControl>
     );
 
@@ -167,11 +168,10 @@ export const AccommodationForm: React.FC<AccommodationFormProps> = ({config, roo
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <CardContent className="form-content">
-                <Typography variant="h5">{config.getTitle(roomName)}</Typography>
+                <Typography className="accommodation-form-title" variant="h5">{config.getTitle(roomName)}</Typography>
 
                 {config.fields.map(renderFieldsGroup)}
 
-                <br/>
                 <Typography variant="caption"
                             className="calculation">Предварительная
                     стоимость: <span>{totalPriceText}</span>.</Typography>

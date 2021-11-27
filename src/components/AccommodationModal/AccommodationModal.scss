@@ -16,7 +16,7 @@
 }
 
 .accommodation-modal {
-  margin: 5% auto;
+  margin: 4em auto;
 
   width: 40vw;
   min-width: 640px;
@@ -46,17 +46,21 @@
     }
 
     .form-content {
-      margin-bottom: 2em;
+      margin-bottom: 1em;
+
+      .accommodation-form-title {
+        padding: 0 0 0.5em 1em;
+      }
     }
 
     .form-actions {
       display: flex;
       justify-content: space-between;
-      margin: 0.25em 1.5em;
 
       .action-group {
         width: 100%;
         display: flex;
+        margin: 0 2em;
 
         &.right {
           justify-content: flex-end;

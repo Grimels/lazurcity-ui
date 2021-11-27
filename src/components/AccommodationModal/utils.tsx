@@ -1,6 +1,6 @@
+import React from 'react';
 import { Control, Controller } from 'react-hook-form';
 import { KeyboardDatePicker } from '@material-ui/pickers';
-import React from 'react';
 import { differenceInDays } from 'date-fns';
 
 export interface FormDateProps {
@@ -30,10 +30,11 @@ export const renderFromDatePicker = (control: AccommodationFormControl, props: F
         render={(date) => (
             <KeyboardDatePicker
                 disableToolbar
-                variant="inline"
+                inputVariant="outlined"
                 format="dd/MM/yyyy"
                 margin="normal"
                 id="from-input"
+                variant="inline"
                 maxDate={props.maxDate}
                 label={props.label}
                 KeyboardButtonProps={{
@@ -53,10 +54,11 @@ export const renderToDatePicker = (control: AccommodationFormControl, props: For
         render={(date) => (
             <KeyboardDatePicker
                 disableToolbar
-                variant="inline"
+                inputVariant="outlined"
                 format="dd/MM/yyyy"
                 margin="normal"
                 id="to-input"
+                variant="inline"
                 label={props.label}
                 minDate={props.minDate}
                 maxDate={props.maxDate}
