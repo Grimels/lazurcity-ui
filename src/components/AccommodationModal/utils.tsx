@@ -30,7 +30,7 @@ export const renderFromDatePicker = (control: AccommodationFormControl, props: F
         render={(date) => (
             <KeyboardDatePicker
                 disableToolbar
-                inputVariant="outlined"
+                inputVariant="standard"
                 format="dd/MM/yyyy"
                 margin="normal"
                 id="from-input"
@@ -54,7 +54,7 @@ export const renderToDatePicker = (control: AccommodationFormControl, props: For
         render={(date) => (
             <KeyboardDatePicker
                 disableToolbar
-                inputVariant="outlined"
+                inputVariant="standard"
                 format="dd/MM/yyyy"
                 margin="normal"
                 id="to-input"
