@@ -1,14 +1,16 @@
 import React, { createRef } from 'react';
-import { AccommodationInfo, RoomAccommodationsHistory } from '../../types/accommodation';
-import { TableBody, TableCell, TableRow } from '@material-ui/core';
-import { Accommodation } from './Accommodation';
-import { getColorLine } from '../../utils/getColorLine';
-import { IRoomProjection } from '../../types/room';
-import { RoomsAccommodationsHistoryStore } from '../../store/roomsAccommodationsStore';
-import { STATUS } from '../../constants/api';
 import * as R from 'ramda';
-import { AccommodationUtils } from '../../utils/accommodationUtils';
+import { TableBody, TableCell, TableRow } from '@material-ui/core';
+
+import { Accommodation } from './Accommodation';
+
+import { getColorLine } from '../../utils/getColorLine';
 import { isToday, isWeekEndDay } from '../../utils/dateUtils';
+import { AccommodationUtils } from '../../utils/accommodationUtils';
+
+import { RoomsAccommodationsHistoryStore } from '../../store/roomsAccommodationsStore';
+import { IRoomProjection } from '../../types/room';
+import { AccommodationInfo, RoomAccommodationsHistory } from '../../types/accommodation';
 
 export interface CalendarTableBodyProps {
     dayRange: Array<Date>,
@@ -20,7 +22,22 @@ export interface CalendarTableBodyProps {
 }
 
 export const CalendarTableBody: React.FC<CalendarTableBodyProps> = (props) => {
-    const { dayRange, startDate, endDate, history, onEmptyCellClick, onAccommodationClick } = props;
+    const {dayRange, startDate, endDate, history, onEmptyCellClick, onAccommodationClick} = props;
+
+    const renderAccommodationCell = (accommodation: AccommodationInfo, room: IRoomProjection, maxDate: Date, className: string) => {
+        const cellRef: React.RefObject<HTMLTableCellElement> = createRef<HTMLTableCellElement>();
+        const handleClick = () => onAccommodationClick(accommodation, maxDate, room);
+
+        return (
+            <TableCell ref={cellRef} key={accommodation.id} className={className}>
+                <Accommodation referredBy={cellRef}
+                               color={getColorLine(accommodation.id)}
+                               accommodation={accommodation}
+                               onClick={handleClick}
+                />
+            </TableCell>
+        );
+    }
 
     const renderTableContent = (accommodations: Array<AccommodationInfo>, room: IRoomProjection) => dayRange.map((day) => {
         const accommodation = AccommodationUtils.findAccommodation(accommodations, startDate, endDate, day);
@@ -30,24 +47,13 @@ export const CalendarTableBody: React.FC<CalendarTableBodyProps> = (props) => {
             R.concat(R.__, isToday(day) ? ' today' : '')
         )('accommodation-cell');
 
-        if (!accommodation) {
-            const handleClick = () => onEmptyCellClick(day, endDate, room);
-            return <TableCell key={`${day.toISOString()}`} className={cellClassName} onClick={handleClick}/>;
+        if (accommodation) {
+            const maxDate: Date = AccommodationUtils
+                .getNewAccommodationDateLimit(accommodations, accommodation, startDate, endDate, day);
+            return renderAccommodationCell(accommodation, room, maxDate, cellClassName);
         }
-
-        const maxDate = AccommodationUtils.getNewAccommodationDateLimit(accommodations, accommodation, startDate, endDate, day);
-        const cellRef: React.RefObject<HTMLTableCellElement> = createRef<HTMLTableCellElement>();
-        const handleClick = () => onAccommodationClick(accommodation, maxDate, room);
-
-        return (
-            <TableCell ref={cellRef} key={accommodation.id} className={cellClassName}>
-                <Accommodation referredBy={cellRef}
-                               color={getColorLine(accommodation.id)}
-                               accommodation={accommodation}
-                               onClick={handleClick}
-                />
-            </TableCell>
-        );
+        const handleClick = () => onEmptyCellClick(day, endDate, room);
+        return <TableCell key={`${day.toISOString()}`} className={cellClassName} onClick={handleClick}/>;
     });
 
     const renderTableRoomRow = (roomHistory: RoomAccommodationsHistory) => (
