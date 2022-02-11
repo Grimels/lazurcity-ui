@@ -1,11 +1,12 @@
+import React from 'react';
 import { Control, Controller } from 'react-hook-form';
 import { KeyboardDatePicker } from '@material-ui/pickers';
-import React from 'react';
 import { differenceInDays } from 'date-fns';
 
 export interface FormDateProps {
     label: string,
     required?: boolean,
+    name: string,
 }
 
 export interface FormStartDateProps extends FormDateProps{
@@ -18,20 +19,22 @@ export interface FormEndDateProps extends FormDateProps {
     isDisabled: boolean,
 }
 
-export type AccommodationFormControl = Control<{ fromDate: Date; toDate: Date; quantity: number; price: number; clientName: string; clientPhoneNumber: string; }, object>
+export type AccommodationFormControl = Control<{ [key: string]: string | number | Date | boolean }, object>
+type AccommodationDateFormControl = Control<{ [key: string]: string | number | Date }, object>
 
 export const renderFromDatePicker = (control: AccommodationFormControl, props: FormStartDateProps) => (
     <Controller
-        name="fromDate"
-        control={control}
+        name={props.name}
+        control={control as AccommodationDateFormControl}
         rules={{required: props.required}}
         render={(date) => (
             <KeyboardDatePicker
                 disableToolbar
-                variant="inline"
+                inputVariant="outlined"
                 format="dd/MM/yyyy"
                 margin="normal"
                 id="from-input"
+                variant="inline"
                 maxDate={props.maxDate}
                 label={props.label}
                 KeyboardButtonProps={{
@@ -45,16 +48,17 @@ export const renderFromDatePicker = (control: AccommodationFormControl, props: F
 
 export const renderToDatePicker = (control: AccommodationFormControl, props: FormEndDateProps) => (
     <Controller
-        name="toDate"
-        control={control}
+        name={props.name}
+        control={control as AccommodationDateFormControl}
         rules={{required: props.required}}
         render={(date) => (
             <KeyboardDatePicker
                 disableToolbar
-                variant="inline"
+                inputVariant="outlined"
                 format="dd/MM/yyyy"
                 margin="normal"
                 id="to-input"
+                variant="inline"
                 label={props.label}
                 minDate={props.minDate}
                 maxDate={props.maxDate}
@@ -70,5 +74,5 @@ export const renderToDatePicker = (control: AccommodationFormControl, props: For
 
 export const calculateTotalPriceText = (fromDate: Date, toDate: Date, price: number) => {
     const diffInDays = differenceInDays(toDate, fromDate);
-    return `${diffInDays} дней * ${price} грн = ${diffInDays * price} грн`;
+    return `${diffInDays} (дней) * ${price} (грн/день) = ${diffInDays * price} грн`;
 }

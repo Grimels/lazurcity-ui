@@ -1,9 +1,13 @@
 $cell-size: 10px;
 $week-end-bg-color: #e7eff5;
 
+.error-alert {
+  position: absolute;
+}
+
 .table-wrapper {
   overflow-x: scroll;
-  margin: auto;
+  margin: 0;
   overflow-y: visible;
   padding: 0;
 
@@ -11,6 +15,9 @@ $week-end-bg-color: #e7eff5;
   flex: 1 1 auto;
   justify-content: stretch;
   max-width: 80vw;
+
+  min-height: 100%;
+  align-items: stretch;
 
   table {
     width: 100%;
@@ -24,9 +31,29 @@ $week-end-bg-color: #e7eff5;
       margin-left: -5px;
       background-color: hsl(0, 0%, 95%);
       visibility: visible;
-      border-top: 1px solid black;
-      border-bottom: 1px solid black;
       z-index: 2;
+      border: none;
+    }
+
+    .markers {
+      min-width: 2em;
+
+      .arg-1 {
+        position: absolute;
+        left: 20px;
+        text-align: center;
+      }
+
+      .arg-2 {
+        position: absolute;
+        top: -2px;
+        left: 12px;
+        transform: rotate(20deg);
+
+        hr {
+          margin-top: 0;
+        }
+      }
     }
   }
 }
@@ -35,8 +62,8 @@ $week-end-bg-color: #e7eff5;
   display: flex;
   vertical-align: center !important;
 
-  border: 1px solid black;
-  padding: 0.5em 1em !important;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0.6em 1.1em !important;
   margin: 0;
   min-width: $cell-size;
   max-width: $cell-size;
@@ -70,18 +97,30 @@ $week-end-bg-color: #e7eff5;
     font-weight: bold;
   }
 
+  .blocker-wrap {
+    position: absolute;
+    padding: 1.3em 0 1.5em 1.5em;
+    top: -7.5px;
+    left: -1.5em;
+  }
+
   & > .accommodation-line {
     padding: 0;
     margin: 0;
-    position: sticky;
+    width: inherit;
 
     display: flex;
     justify-content: center;
     align-items: stretch;
 
-    width: calc(#{$cell-size} + 80);
     height: 1.75em;
     transform: skew(-20deg);
+
+    .label.end {
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 5%;
+    }
   }
 
 }

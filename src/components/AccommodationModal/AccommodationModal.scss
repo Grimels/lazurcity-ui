@@ -1,12 +1,4 @@
 
-.creation-modal input {
-  font-size: 1.5em;
-}
-
-.creation-modal label {
-  font-size: 1.2em;
-}
-
 .confirmation-card {
   width: 25vw;
   height: 20vh;
@@ -23,47 +15,58 @@
   }
 }
 
-.creation-card {
+.accommodation-modal {
+  margin: 4em auto;
+
   width: 40vw;
-  height: 50vh;
-  padding: 2vh 2vw;
-
-  margin: 10% auto;
-
-  .calculation {
-    margin: 2em;
-  }
+  min-width: 640px;
 
   form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
+    padding: 1em 0;
 
-    .create-actions {
+    .input-row {
+      width: 100%;
       display: flex;
       justify-content: space-between;
-    }
-
-    .input-column {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      margin: 1em;
+      font-size: 1.2em;
 
       .input-item {
-        margin: 0.5em 0;
+        margin: 0.25em 1em;
+        width: 100%;
+        font-size: 1.2em;
       }
     }
-  }
 
-  .create-accommodation-form {
-    display: flex;
-    align-items: stretch;
+    .calculation {
+      margin: 0.25em 2em;
 
-    .space-between {
+      span {
+        font-weight: bold;
+      }
+    }
+
+    .form-content {
+      margin-bottom: 1em;
+
+      .accommodation-form-title {
+        padding: 0 0 0.5em 1em;
+      }
+    }
+
+    .form-actions {
       display: flex;
       justify-content: space-between;
+
+      .action-group {
+        width: 100%;
+        display: flex;
+        margin: 0 2em;
+
+        &.right {
+          justify-content: flex-end;
+        }
+      }
     }
+
   }
 }

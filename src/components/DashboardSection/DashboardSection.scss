@@ -8,14 +8,6 @@
   flex-direction: column;
   align-items: start;
 
-  .header {
-    font-size: 42px;
-    font-weight: bold;
-    margin-bottom: 1em;
-
-    color: $side-bar-logo-color;
-  }
-
   .section {
     display: flex;
     justify-content: space-between;
@@ -31,9 +23,9 @@
   }
 
   .incomes-chart-container {
-    width: 20vw;
+    width: 25vw;
     height: min-content;
-    margin: 2em;
+    margin: 2em 1em;
     padding: 2em;
 
     border: 1px solid #dcdcdc;

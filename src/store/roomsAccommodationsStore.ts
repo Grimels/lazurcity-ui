@@ -40,42 +40,70 @@ export const fetchRoomsAccommodationsHistory = createAsyncThunk<{ startDate: Dat
 })
 
 const UPDATE_ACCOMMODATION_ACTION = 'rooms/updateAccommodation';
-export const updateRoomAccommodation = createAsyncThunk<{
+export const updateRoomAccommodation = createAsyncThunk<Partial<{
     accommodationId: number,
     startDate: Date,
     endDate: Date,
     quantity: number,
-    price: number
-}, {
+    price: number,
+    clientName: string,
+    clientPhoneNumber: string,
+    isFinal: boolean,
+    comment: string,
+}>, Partial<{
     accommodationId: number,
     startDate: Date,
     endDate: Date,
     quantity: number,
-    price: number
-}>(UPDATE_ACCOMMODATION_ACTION, async ({accommodationId, startDate, endDate, quantity, price}) => {
-    await AccommodationsDataService.updateAccommodation(accommodationId, startDate, endDate, quantity, price);
-    return {accommodationId, startDate, endDate, quantity, price};
+    price: number,
+    clientName: string,
+    clientPhoneNumber: string,
+    isFinal: boolean,
+    comment: string,
+}>>(UPDATE_ACCOMMODATION_ACTION, async ({
+                                            accommodationId,
+                                            startDate,
+                                            endDate,
+                                            quantity,
+                                            price,
+                                            clientName,
+                                            clientPhoneNumber,
+                                            isFinal,
+                                            comment,
+                                        }) => {
+    if (accommodationId == null || startDate == null || endDate == null || quantity == null || price == null || clientName == null || clientPhoneNumber == null || comment == null) {
+        return Promise.reject(new Error('Invalid update request!'));
+    }
+    await AccommodationsDataService.updateAccommodation(accommodationId, startDate, endDate, quantity, price, clientName, clientPhoneNumber, Boolean(isFinal), comment);
+    return {accommodationId, startDate, endDate, quantity, price, clientName, clientPhoneNumber, isFinal, comment};
 });
 
 const CREATE_ACCOMMODATION_ACTION = 'rooms/createAccommodation';
-export const createRoomAccommodation = createAsyncThunk<IAccommodation, {
+export const createRoomAccommodation = createAsyncThunk<IAccommodation, Partial<{
     roomId: number,
     clientName: string,
     clientPhoneNumber: string,
     startDate: Date,
     endDate: Date,
     quantity: number,
-    price: number
-}>(CREATE_ACCOMMODATION_ACTION, async ({
-                                           roomId,
-                                           clientName,
-                                           clientPhoneNumber,
-                                           startDate,
-                                           endDate,
-                                           quantity,
-                                           price
-                                       }) => {
-    return await AccommodationsDataService.createAccommodation(roomId, clientName, clientPhoneNumber, startDate, endDate, quantity, price);
+    price: number,
+    isFinal: boolean,
+    comment: string,
+}>>(CREATE_ACCOMMODATION_ACTION, async ({
+                                            roomId,
+                                            clientName,
+                                            clientPhoneNumber,
+                                            startDate,
+                                            endDate,
+                                            quantity,
+                                            price,
+                                            isFinal,
+                                            comment,
+                                        }) => {
+    if (roomId == null || startDate == null || endDate == null || quantity == null || price == null || clientName == null || clientPhoneNumber == null || comment == null) {
+        return Promise.reject(new Error('Invalid create request!'));
+    }
+    return await AccommodationsDataService.createAccommodation(roomId, clientName, clientPhoneNumber, startDate, endDate, quantity, price, Boolean(isFinal), comment);
 });
 
 const DELETE_ACCOMMODATION_ACTION = 'rooms/deleteAccommodation';
@@ -103,6 +131,7 @@ export const roomsAccommodationsHistoryStore = createSlice({
         });
         builder.addCase(fetchRoomsAccommodationsHistory.rejected, (state, {error}) => ({status: STATUS.ERROR, error}));
 
+        builder.addCase(updateRoomAccommodation.rejected, (state, {error}) => ({status: STATUS.ERROR, error}));
         builder.addCase(updateRoomAccommodation.fulfilled, (state, {payload}) => {
             const history: RoomAccommodationsHistory[] = (state as RoomsAccommodationsHistoryStore).roomsHistory;
             let roomIndex = -1;
@@ -125,8 +154,11 @@ export const roomsAccommodationsHistoryStore = createSlice({
 
             const updatedAccommodation = {...searchedAccommodation, ...payload};
             updatedAccommodation.daysLeft = differenceInDays(updatedAccommodation.endDate, updatedAccommodation.startDate);
+            if (payload.clientName) updatedAccommodation.client.name = payload.clientName;
+            if (payload.clientPhoneNumber) updatedAccommodation.client.phoneNumber = payload.clientPhoneNumber;
             history[roomIndex].accommodations.push(updatedAccommodation);
         });
+        builder.addCase(createRoomAccommodation.rejected, (state, {error}) => ({status: STATUS.ERROR, error}));
         builder.addCase(createRoomAccommodation.fulfilled, (state, {payload: accommodation}) => {
             const history: RoomAccommodationsHistory[] = (state as RoomsAccommodationsHistoryStore).roomsHistory;
             let searchedRoomHistory;
