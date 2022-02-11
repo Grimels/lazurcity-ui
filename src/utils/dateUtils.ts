@@ -1,10 +1,10 @@
-import { MONTH_NAME_BY_NUMBER, MONTH_NUMBER_BY_NAME } from '../constants/date';
+import { MONTH_NAME_BY_NUMBER, MONTH_NUMBER_BY_NAME, SEASON } from '../constants/date';
 import { Month } from '../types/date';
 
 export const isWeekEndDay = (date: Date) => date.getDay() === 0 || date.getDay() === 6;
 
 export const isToday = (date: Date) => {
-    const today = new Date();
+    const today = SEASON.TODAY;
     return date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() === today.getDate();
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { TableCell, TableHead, TableRow } from '@material-ui/core';
 import { lastDayOfMonth } from 'date-fns';
-import { RU_MONTH_NAME_BY_NUMBER } from '../../constants/date';
+import { RU_MONTH_NAME_BY_NUMBER, SEASON } from '../../constants/date';
 import { equalsDates } from '../../utils/equals';
 import { getAccommodationCellClass } from './util';
 
@@ -36,7 +36,7 @@ export const CalendarTableHead: React.FC<CalendarTableHeadProps> = ({ year, dayR
     }
 
     const renderTableHeadCellInDayRange: (day: Date, index: number) => JSX.Element = (day, index) => {
-        const isToday = equalsDates(day, new Date());
+        const isToday = equalsDates(day, SEASON.TODAY);
         return (
             <TableCell key={`room-${day.getTime()}`}
                        align="center"

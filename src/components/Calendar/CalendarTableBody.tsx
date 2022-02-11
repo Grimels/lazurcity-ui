@@ -45,7 +45,7 @@ export const CalendarTableBody: React.FC<CalendarTableBodyProps> = (props) => {
         const cellClassName = R.pipe(
             R.concat(R.__, isWeekEndDay(day) ? ' week-end' : ''),
             R.concat(R.__, isToday(day) ? ' today' : '')
-        )('accommodation-cell');
+        )('accommodation-cell day-range');
 
         if (accommodation) {
             const maxDate: Date = AccommodationUtils
